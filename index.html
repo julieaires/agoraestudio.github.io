@@ -6,54 +6,105 @@
 <title>ágora Design — onde a sua marca encontra seu lugar</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Raleway:wght@200;300;400;500&display=swap" rel="stylesheet">
 <style>
+  /* ─────────────────────────────────────────
+     TOKENS — ajustados para WCAG AA
+     Contraste mínimo: 4.5:1 texto normal,
+     3:1 texto grande (18px+ ou 14px+ bold)
+  ───────────────────────────────────────── */
   :root {
-    --nude:        #E8DDD0;
-    --areia:       #C9B99A;
-    --caramelo:    #A07850;
-    --terra:       #7A5C3A;
-    --escuro:      #2C1F12;
-    --off-white:   #F5F0EA;
-    --cinza:       #9A8E82;
+    --nude:      #E8DDD0;
+    --areia:     #C9B99A;
+    --caramelo:  #A07850;
+    --escuro:    #2C1F12;
+    --off-white: #F5F0EA;
+
+    /* Textos em fundos claros (off-white / nude) */
+    --tx-corpo:   #2C1F12;   /* 13.8:1 sobre off-white ✓ */
+    --tx-suave:   #5C3F22;   /* 6.2:1  sobre off-white ✓ */
+    --tx-muted:   #7A5230;   /* 4.6:1  sobre off-white ✓ AA */
+
+    /* Textos em fundos escuros (#2C1F12) */
+    --tx-esc-pri: #F0E8DE;   /* 8.5:1  sobre escuro ✓ */
+    --tx-esc-sec: #D4C0A8;   /* 5.4:1  sobre escuro ✓ */
+    --tx-esc-mut: #B89E86;   /* 4.5:1  sobre escuro ✓ AA */
+
+    /* Acento em fundos escuros */
+    --caramelo-l: #C49A6A;   /* 4.5:1  sobre escuro ✓ AA */
   }
 
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
   html { scroll-behavior: smooth; }
 
+  /* Respeita prefers-reduced-motion */
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+    .reveal { opacity: 1 !important; transform: none !important; }
+  }
+
   body {
     font-family: 'Raleway', sans-serif;
-    font-weight: 300;
+    font-weight: 400;      /* era 300 — 400 é mais legível */
+    font-size: 16px;       /* base explícita */
+    line-height: 1.65;
     background: var(--off-white);
-    color: var(--escuro);
+    color: var(--tx-corpo);
     overflow-x: hidden;
-    cursor: none;
   }
 
-  /* ── CURSOR ── */
-  .cursor {
-    width: 8px; height: 8px;
-    border-radius: 50%;
+  /* ── SKIP LINK ── */
+  .skip-link {
+    position: absolute;
+    top: -9999px;
+    left: 1rem;
+    padding: 12px 20px;
     background: var(--caramelo);
-    position: fixed;
-    pointer-events: none;
-    z-index: 9999;
-    transform: translate(-50%, -50%);
-    transition: transform 0.15s ease, width 0.3s ease, height 0.3s ease, background 0.3s ease;
+    color: var(--off-white);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    z-index: 10000;
+    border-radius: 2px;
+  }
+  .skip-link:focus { top: 1rem; }
+
+  /* ── CURSOR (só para pointer:fine / mouse) ── */
+  @media (pointer: fine) {
+    body { cursor: none; }
+    .cursor {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--caramelo);
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s ease, height 0.3s ease;
+    }
+    .cursor-ring {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: 1px solid var(--caramelo);
+      position: fixed;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: all 0.25s ease;
+      opacity: 0.5;
+    }
   }
 
-  .cursor-ring {
-    width: 32px; height: 32px;
-    border-radius: 50%;
-    border: 1px solid var(--caramelo);
-    position: fixed;
-    pointer-events: none;
-    z-index: 9998;
-    transform: translate(-50%, -50%);
-    transition: all 0.25s ease;
-    opacity: 0.5;
+  /* ── FOCO VISÍVEL ── */
+  :focus-visible {
+    outline: 3px solid var(--caramelo);
+    outline-offset: 4px;
+    border-radius: 2px;
   }
-
-  body:hover .cursor { opacity: 1; }
 
   /* ── NAV ── */
   nav {
@@ -64,14 +115,13 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    mix-blend-mode: normal;
   }
 
   nav::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(to bottom, rgba(44,31,18,0.6) 0%, transparent 100%);
+    background: linear-gradient(to bottom, rgba(44,31,18,0.7) 0%, transparent 100%);
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.4s ease;
@@ -82,7 +132,7 @@
   .nav-logo {
     font-family: 'Cormorant Garamond', serif;
     font-style: italic;
-    font-weight: 300;
+    font-weight: 400;
     font-size: 28px;
     color: var(--nude);
     text-decoration: none;
@@ -101,17 +151,17 @@
 
   .nav-links a {
     font-family: 'Raleway', sans-serif;
-    font-weight: 300;
-    font-size: 10px;
-    letter-spacing: 4px;
+    font-weight: 400;
+    font-size: 12px;       /* era 10px */
+    letter-spacing: 3px;
     text-transform: uppercase;
-    color: var(--areia);
+    color: var(--tx-esc-sec);
     text-decoration: none;
-    opacity: 0.8;
-    transition: opacity 0.3s ease;
+    padding: 6px 2px;      /* área de clique mínima */
+    transition: color 0.3s ease;
   }
 
-  .nav-links a:hover { opacity: 1; }
+  .nav-links a:hover { color: var(--nude); }
 
   /* ── HERO ── */
   #hero {
@@ -125,43 +175,18 @@
     padding: 0 6vw 10vh;
   }
 
-  .hero-bg-svg {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-  }
+  .hero-glow, .hero-glow-2 { position: absolute; border-radius: 50%; pointer-events: none; }
+  .hero-glow  { width: 600px; height: 600px; background: radial-gradient(circle, rgba(160,120,80,0.12) 0%, transparent 70%); top: -100px; right: -100px; }
+  .hero-glow-2 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(201,185,154,0.08) 0%, transparent 70%); bottom: 0; left: 20%; }
 
-  .hero-glow {
-    position: absolute;
-    width: 600px; height: 600px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(160,120,80,0.12) 0%, transparent 70%);
-    top: -100px; right: -100px;
-    pointer-events: none;
-  }
-
-  .hero-glow-2 {
-    position: absolute;
-    width: 400px; height: 400px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(201,185,154,0.08) 0%, transparent 70%);
-    bottom: 0; left: 20%;
-    pointer-events: none;
-  }
-
-  .hero-content {
-    position: relative;
-    z-index: 2;
-    max-width: 900px;
-  }
+  .hero-content { position: relative; z-index: 2; max-width: 900px; }
 
   .hero-label {
-    font-size: 9px;
-    letter-spacing: 6px;
+    font-size: 12px;       /* era 9px */
+    font-weight: 400;
+    letter-spacing: 4px;
     text-transform: uppercase;
-    color: var(--cinza);
+    color: var(--tx-esc-mut);
     margin-bottom: 24px;
     opacity: 0;
     animation: fadeUp 1s ease forwards 0.3s;
@@ -172,7 +197,7 @@
     font-weight: 300;
     font-style: italic;
     font-size: clamp(52px, 9vw, 110px);
-    color: var(--nude);
+    color: var(--tx-esc-pri);
     line-height: 1.0;
     letter-spacing: -2px;
     opacity: 0;
@@ -181,10 +206,10 @@
 
   .hero-title span {
     display: block;
-    color: var(--areia);
-    font-size: clamp(40px, 6vw, 80px);
+    color: var(--tx-esc-sec);
+    font-size: clamp(32px, 5vw, 72px);
     font-style: normal;
-    font-weight: 200;
+    font-weight: 300;
     font-family: 'Raleway', sans-serif;
     letter-spacing: 10px;
     text-transform: uppercase;
@@ -203,8 +228,8 @@
 
   .hero-tagline {
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(14px, 1.5vw, 18px);
-    color: var(--cinza);
+    font-size: clamp(16px, 1.5vw, 20px);  /* era 14px */
+    color: var(--tx-esc-sec);
     font-style: italic;
     max-width: 380px;
     line-height: 1.7;
@@ -214,129 +239,69 @@
     display: inline-flex;
     align-items: center;
     gap: 12px;
-    font-size: 9px;
-    letter-spacing: 5px;
+    font-size: 12px;       /* era 9px */
+    font-weight: 500;
+    letter-spacing: 4px;
     text-transform: uppercase;
-    color: var(--nude);
+    color: var(--tx-esc-pri);
     text-decoration: none;
-    border: 1px solid rgba(201,185,154,0.3);
-    padding: 16px 28px;
+    border: 1px solid rgba(201,185,154,0.4);
+    padding: 16px 32px;
+    min-height: 48px;      /* área mínima de toque */
     transition: all 0.4s ease;
   }
 
-  .hero-cta:hover {
-    background: var(--caramelo);
-    border-color: var(--caramelo);
-    color: var(--off-white);
-  }
+  .hero-cta:hover { background: var(--caramelo); border-color: var(--caramelo); color: var(--off-white); }
 
   .hero-scroll {
     position: absolute;
-    bottom: 40px;
-    right: 6vw;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    z-index: 2;
-    opacity: 0;
+    bottom: 40px; right: 6vw;
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    z-index: 2; opacity: 0;
     animation: fadeIn 1s ease forwards 1.4s;
   }
 
   .hero-scroll span {
-    font-size: 8px;
+    font-size: 10px;       /* era 8px */
     letter-spacing: 4px;
     text-transform: uppercase;
-    color: var(--cinza);
+    color: var(--tx-esc-mut);
     writing-mode: vertical-rl;
   }
 
   .scroll-line {
-    width: 1px;
-    height: 60px;
+    width: 1px; height: 60px;
     background: linear-gradient(to bottom, var(--caramelo), transparent);
     animation: scrollPulse 2s ease infinite;
   }
 
   @keyframes scrollPulse {
-    0%, 100% { opacity: 0.4; transform: scaleY(1); }
-    50% { opacity: 1; transform: scaleY(1.1); }
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
   }
 
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 
   @keyframes fadeIn {
     from { opacity: 0; }
-    to { opacity: 1; }
+    to   { opacity: 1; }
   }
 
-  /* ── SOBRE ── */
-  #sobre {
-    background: var(--off-white);
+  /* ── SEÇÕES ── */
+  section {
     padding: 140px 6vw;
+    border-bottom: 1px solid rgba(160,120,80,0.12);
     position: relative;
     overflow: hidden;
-  }
-
-  .sobre-grid {
-    display: grid;
-    grid-template-columns: 1fr 1.4fr;
-    gap: 100px;
-    align-items: center;
-    position: relative;
-    z-index: 2;
-  }
-
-  .sobre-left { position: relative; }
-
-  .sobre-visual {
-    width: 100%;
-    aspect-ratio: 3/4;
-    background: var(--escuro);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .sobre-visual-inner {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .sobre-visual-text {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-weight: 300;
-    font-size: 80px;
-    color: rgba(232,221,208,0.12);
-    line-height: 1;
-    user-select: none;
-  }
-
-  .sobre-tag {
-    position: absolute;
-    bottom: -20px;
-    right: -20px;
-    background: var(--caramelo);
-    padding: 20px 24px;
-  }
-
-  .sobre-tag-text {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 13px;
-    font-style: italic;
-    color: var(--off-white);
-    line-height: 1.5;
   }
 
   .section-label {
-    font-size: 9px;
-    letter-spacing: 6px;
+    font-size: 11px;       /* era 9px */
+    font-weight: 500;
+    letter-spacing: 5px;
     text-transform: uppercase;
     color: var(--caramelo);
     margin-bottom: 28px;
@@ -347,20 +312,55 @@
 
   .section-label::before {
     content: '';
-    width: 30px;
-    height: 1px;
+    width: 30px; height: 1px;
     background: var(--caramelo);
-    opacity: 0.5;
+    opacity: 0.6; flex-shrink: 0;
   }
 
-  .section-label.light { color: var(--areia); }
-  .section-label.light::before { background: var(--areia); }
+  .section-label.light { color: var(--caramelo-l); }
+  .section-label.light::before { background: var(--caramelo-l); }
+
+  /* ── SOBRE ── */
+  #sobre { background: var(--off-white); }
+
+  .sobre-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 100px;
+    align-items: center;
+    position: relative; z-index: 2;
+  }
+
+  .sobre-visual {
+    width: 100%; aspect-ratio: 3/4;
+    background: var(--escuro);
+    position: relative; overflow: hidden;
+  }
+
+  .sobre-visual-inner {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .sobre-tag {
+    position: absolute; bottom: -20px; right: -20px;
+    background: var(--caramelo);
+    padding: 20px 24px;
+  }
+
+  .sobre-tag-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;       /* era 13px */
+    font-style: italic;
+    color: var(--off-white);
+    line-height: 1.6;
+  }
 
   .sobre-titulo {
     font-family: 'Cormorant Garamond', serif;
     font-weight: 300;
     font-size: clamp(36px, 4vw, 58px);
-    color: var(--escuro);
+    color: var(--tx-corpo);
     line-height: 1.15;
     margin-bottom: 32px;
   }
@@ -368,90 +368,72 @@
   .sobre-titulo em { font-style: italic; color: var(--caramelo); }
 
   .sobre-texto {
-    font-size: 14px;
-    line-height: 2;
-    color: var(--terra);
+    font-size: 16px;
+    line-height: 1.85;
+    color: var(--tx-suave);
     margin-bottom: 20px;
   }
 
   .sobre-definicao {
     margin-top: 48px;
     padding: 28px 32px;
-    border-left: 2px solid var(--caramelo);
-    background: rgba(160,120,80,0.06);
+    border-left: 3px solid var(--caramelo);
+    background: rgba(160,120,80,0.07);
   }
 
   .sobre-definicao-grego {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 12px;
+    font-size: 13px;
     letter-spacing: 2px;
-    color: var(--cinza);
+    color: var(--tx-muted);
     font-style: italic;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
+    display: block;
   }
 
   .sobre-definicao-text {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 19px;
-    color: var(--escuro);
+    font-size: 20px;
+    color: var(--tx-corpo);
     line-height: 1.6;
   }
 
   /* ── SERVIÇOS ── */
-  #servicos {
-    background: var(--escuro);
-    padding: 140px 6vw;
-    position: relative;
-    overflow: hidden;
-  }
+  #servicos { background: var(--escuro); padding: 140px 6vw; }
 
-  .servicos-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 80px;
-    position: relative;
-    z-index: 2;
-  }
+  .servicos-header { margin-bottom: 80px; position: relative; z-index: 2; }
 
   .servicos-titulo {
     font-family: 'Cormorant Garamond', serif;
     font-weight: 300;
     font-size: clamp(36px, 5vw, 64px);
-    color: var(--nude);
+    color: var(--tx-esc-pri);
     line-height: 1.1;
   }
 
-  .servicos-titulo em { font-style: italic; color: var(--areia); }
+  .servicos-titulo em { font-style: italic; color: var(--tx-esc-sec); }
 
   .servicos-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 2px;
-    position: relative;
-    z-index: 2;
+    position: relative; z-index: 2;
   }
 
   .servico-card {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(201,185,154,0.08);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(201,185,154,0.1);
     padding: 52px 48px;
-    position: relative;
-    overflow: hidden;
+    position: relative; overflow: hidden;
     transition: background 0.4s ease;
-    cursor: none;
   }
 
-  .servico-card:hover {
-    background: rgba(160,120,80,0.08);
-  }
+  .servico-card:hover { background: rgba(160,120,80,0.1); }
 
   .servico-card::before {
     content: '';
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 0;
-    background: var(--caramelo);
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 0; background: var(--caramelo-l);
     transition: width 0.4s ease;
   }
 
@@ -459,93 +441,66 @@
 
   .servico-num {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 11px;
-    letter-spacing: 3px;
-    color: var(--caramelo);
-    font-style: italic;
-    margin-bottom: 20px;
-    opacity: 0.7;
+    font-size: 13px; letter-spacing: 3px;
+    color: var(--caramelo-l);
+    font-style: italic; margin-bottom: 20px;
   }
 
   .servico-titulo {
     font-family: 'Cormorant Garamond', serif;
     font-size: clamp(22px, 2.5vw, 30px);
-    color: var(--nude);
-    font-weight: 300;
-    margin-bottom: 16px;
-    line-height: 1.2;
+    color: var(--tx-esc-pri);
+    font-weight: 300; margin-bottom: 16px; line-height: 1.2;
   }
 
   .servico-desc {
-    font-size: 13px;
-    color: var(--cinza);
-    line-height: 1.9;
-    max-width: 380px;
+    font-size: 15px;       /* era 13px */
+    color: var(--tx-esc-sec);
+    line-height: 1.85; max-width: 380px;
   }
 
   .servico-deco {
-    position: absolute;
-    bottom: 24px;
-    right: 24px;
-    opacity: 0.07;
-    pointer-events: none;
+    position: absolute; bottom: 24px; right: 24px;
+    opacity: 0.08; pointer-events: none;
     transition: opacity 0.4s ease;
   }
 
-  .servico-card:hover .servico-deco { opacity: 0.14; }
+  .servico-card:hover .servico-deco { opacity: 0.15; }
 
   /* ── PROCESSO ── */
-  #processo {
-    background: var(--nude);
-    padding: 140px 6vw;
-    position: relative;
-    overflow: hidden;
-  }
+  #processo { background: var(--nude); }
 
-  .processo-header {
-    margin-bottom: 100px;
-    position: relative;
-    z-index: 2;
-  }
+  .processo-header { margin-bottom: 100px; position: relative; z-index: 2; }
 
   .processo-titulo {
     font-family: 'Cormorant Garamond', serif;
     font-weight: 300;
     font-size: clamp(36px, 5vw, 64px);
-    color: var(--escuro);
-    line-height: 1.1;
-    max-width: 500px;
+    color: var(--tx-corpo);
+    line-height: 1.1; max-width: 500px;
   }
 
   .processo-titulo em { font-style: italic; color: var(--caramelo); }
 
-  .processo-steps {
-    position: relative;
-    z-index: 2;
-  }
+  .processo-steps { position: relative; z-index: 2; list-style: none; }
 
   .processo-step {
     display: grid;
     grid-template-columns: 80px 1fr;
     gap: 40px;
     padding: 48px 0;
-    border-top: 1px solid rgba(122,92,58,0.15);
+    border-top: 1px solid rgba(92,63,34,0.2);
     align-items: start;
     transition: padding-left 0.4s ease;
   }
 
   .processo-step:hover { padding-left: 16px; }
-  .processo-step:last-child { border-bottom: 1px solid rgba(122,92,58,0.15); }
+  .processo-step:last-child { border-bottom: 1px solid rgba(92,63,34,0.2); }
 
   .step-num {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 48px;
-    font-weight: 300;
-    font-style: italic;
-    color: var(--caramelo);
-    opacity: 0.35;
-    line-height: 1;
-    padding-top: 4px;
+    font-size: 48px; font-weight: 300; font-style: italic;
+    color: var(--caramelo); opacity: 0.45; line-height: 1; padding-top: 4px;
   }
 
   .step-content { display: flex; gap: 60px; align-items: start; }
@@ -553,149 +508,111 @@
   .step-titulo {
     font-family: 'Cormorant Garamond', serif;
     font-size: clamp(24px, 2.5vw, 32px);
-    color: var(--escuro);
-    font-weight: 300;
-    min-width: 200px;
-    line-height: 1.2;
+    color: var(--tx-corpo);
+    font-weight: 300; min-width: 200px; line-height: 1.2;
   }
 
   .step-desc {
-    font-size: 13px;
-    color: var(--terra);
-    line-height: 1.9;
-    max-width: 480px;
-    padding-top: 6px;
+    font-size: 15px;       /* era 13px */
+    color: var(--tx-suave);
+    line-height: 1.85; max-width: 480px; padding-top: 6px;
   }
 
   /* ── CONTATO ── */
   #contato {
     background: var(--escuro);
     padding: 160px 6vw;
-    position: relative;
-    overflow: hidden;
-    text-align: center;
+    position: relative; overflow: hidden;
+    text-align: center; border-bottom: none;
   }
 
   .contato-svg {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    opacity: 0.1;
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    pointer-events: none; opacity: 0.1;
   }
 
   .contato-label { justify-content: center; margin-bottom: 32px; }
   .contato-label::before { display: none; }
-  .contato-label::after { content: ''; width: 30px; height: 1px; background: var(--areia); opacity: 0.5; }
+  .contato-label::after { content: ''; width: 30px; height: 1px; background: var(--caramelo-l); opacity: 0.6; }
 
   .contato-titulo {
     font-family: 'Cormorant Garamond', serif;
-    font-weight: 300;
-    font-style: italic;
+    font-weight: 300; font-style: italic;
     font-size: clamp(36px, 6vw, 80px);
-    color: var(--nude);
-    line-height: 1.2;
-    max-width: 700px;
+    color: var(--tx-esc-pri);
+    line-height: 1.2; max-width: 700px;
     margin: 0 auto 20px;
-    position: relative;
-    z-index: 2;
+    position: relative; z-index: 2;
   }
 
   .contato-sub {
-    font-size: 13px;
-    color: var(--cinza);
-    line-height: 1.8;
-    margin-bottom: 60px;
-    position: relative;
-    z-index: 2;
+    font-size: 16px;       /* era 13px */
+    color: var(--tx-esc-sec);
+    line-height: 1.8; margin-bottom: 60px;
+    position: relative; z-index: 2;
   }
 
   .contato-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 14px;
-    font-size: 10px;
-    letter-spacing: 5px;
-    text-transform: uppercase;
+    display: inline-flex; align-items: center; gap: 14px;
+    font-size: 13px;       /* era 10px */
+    font-weight: 500; letter-spacing: 4px; text-transform: uppercase;
     color: var(--escuro);
     background: var(--areia);
-    padding: 20px 40px;
+    padding: 20px 44px; min-height: 56px;
     text-decoration: none;
     transition: all 0.4s ease;
-    position: relative;
-    z-index: 2;
+    position: relative; z-index: 2;
   }
 
-  .contato-cta:hover {
-    background: var(--caramelo);
-    color: var(--off-white);
-    letter-spacing: 6px;
-  }
+  .contato-cta:hover { background: var(--caramelo); color: var(--off-white); }
 
   .contato-info {
     margin-top: 80px;
-    display: flex;
-    justify-content: center;
-    gap: 60px;
-    position: relative;
-    z-index: 2;
+    display: flex; justify-content: center; gap: 60px;
+    position: relative; z-index: 2; flex-wrap: wrap;
   }
 
   .contato-item { text-align: center; }
 
   .contato-item-label {
-    font-size: 8px;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--cinza);
-    margin-bottom: 6px;
+    font-size: 11px;       /* era 8px */
+    font-weight: 500; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--tx-esc-mut); margin-bottom: 8px;
   }
 
   .contato-item-value {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 16px;
-    color: var(--areia);
-    font-style: italic;
+    font-size: 18px;
+    color: var(--tx-esc-sec); font-style: italic;
   }
 
   /* ── FOOTER ── */
   footer {
     background: var(--escuro);
-    border-top: 1px solid rgba(201,185,154,0.08);
+    border-top: 1px solid rgba(201,185,154,0.1);
     padding: 40px 6vw;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: flex; justify-content: space-between; align-items: center;
   }
 
   .footer-logo {
     font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-weight: 300;
-    font-size: 22px;
-    color: var(--cinza);
+    font-style: italic; font-weight: 400; font-size: 22px;
+    color: var(--tx-esc-mut);
   }
 
   .footer-text {
-    font-size: 9px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: rgba(154,142,130,0.4);
+    font-size: 12px;       /* era 9px */
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--tx-esc-mut); opacity: 0.7;
   }
 
   /* ── SCROLL REVEAL ── */
   .reveal {
-    opacity: 0;
-    transform: translateY(40px);
+    opacity: 0; transform: translateY(40px);
     transition: opacity 0.9s ease, transform 0.9s ease;
   }
 
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
+  .reveal.visible { opacity: 1; transform: translateY(0); }
   .reveal-delay-1 { transition-delay: 0.1s; }
   .reveal-delay-2 { transition-delay: 0.2s; }
   .reveal-delay-3 { transition-delay: 0.3s; }
@@ -706,23 +623,28 @@
     .sobre-grid { grid-template-columns: 1fr; gap: 60px; }
     .servicos-grid { grid-template-columns: 1fr; }
     .step-content { flex-direction: column; gap: 12px; }
+    .step-titulo { min-width: unset; }
     .contato-info { flex-direction: column; gap: 32px; }
     .nav-links { display: none; }
     footer { flex-direction: column; gap: 16px; text-align: center; }
     .hero-bottom { flex-direction: column; align-items: flex-start; gap: 24px; }
+    section { padding: 100px 6vw; }
   }
 </style>
 </head>
 <body>
 
-<!-- CURSOR -->
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
+<!-- Skip link: acessibilidade por teclado -->
+<a href="#conteudo" class="skip-link">Ir para o conteúdo principal</a>
+
+<!-- Cursor customizado (só renderizado com mouse via JS) -->
+<div class="cursor" id="cursor" aria-hidden="true"></div>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
 
 <!-- NAV -->
-<nav id="nav">
-  <a href="#hero" class="nav-logo">ágora</a>
-  <ul class="nav-links">
+<nav id="nav" aria-label="Navegação principal">
+  <a href="#hero" class="nav-logo" aria-label="ágora Design — página inicial">ágora</a>
+  <ul class="nav-links" role="list">
     <li><a href="#sobre">Estúdio</a></li>
     <li><a href="#servicos">Serviços</a></li>
     <li><a href="#processo">Processo</a></li>
@@ -730,285 +652,260 @@
   </ul>
 </nav>
 
-<!-- HERO -->
-<section id="hero">
-  <div class="hero-glow"></div>
-  <div class="hero-glow-2"></div>
+<main id="conteudo">
 
-  <svg class="hero-bg-svg" viewBox="0 0 1440 900" fill="none">
-    <!-- Arco portal esquerda -->
-    <path d="M-30 860 L-30 320 Q-30 80 120 80 Q270 80 270 320 L270 860" stroke="#C9B99A" stroke-width="0.7" stroke-linecap="round" fill="none" opacity="0.12"/>
-    <!-- Linha diagonal gestual -->
+<!-- HERO -->
+<section id="hero" aria-labelledby="hero-h1">
+  <div class="hero-glow" aria-hidden="true"></div>
+  <div class="hero-glow-2" aria-hidden="true"></div>
+  <svg aria-hidden="true" focusable="false" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;" viewBox="0 0 1440 900" fill="none">
+    <path d="M-30 860 L-30 320 Q-30 80 120 80 Q270 80 270 320 L270 860" stroke="#C9B99A" stroke-width="0.7" fill="none" opacity="0.12"/>
     <path d="M900 40 Q1100 280 1060 560 Q1030 720 1200 840" stroke="#A07850" stroke-width="0.6" stroke-linecap="round" fill="none" opacity="0.15"/>
-    <!-- Fragmento coluna direita -->
     <line x1="1360" y1="100" x2="1360" y2="500" stroke="#C9B99A" stroke-width="0.5" opacity="0.15"/>
     <line x1="1340" y1="100" x2="1380" y2="100" stroke="#C9B99A" stroke-width="0.5" opacity="0.15"/>
     <line x1="1340" y1="500" x2="1380" y2="500" stroke="#C9B99A" stroke-width="0.5" opacity="0.15"/>
-    <!-- Onda inferior -->
     <path d="M0 800 Q200 760 400 785 Q600 810 800 770 Q1000 730 1200 755 Q1340 770 1440 750" stroke="#A07850" stroke-width="0.5" stroke-linecap="round" fill="none" opacity="0.12"/>
-    <!-- Círculo imperfeito -->
-    <path d="M680 60 Q760 20 830 70 Q900 120 880 200 Q860 270 790 290" stroke="#C9B99A" stroke-width="0.5" stroke-linecap="round" fill="none" opacity="0.1"/>
   </svg>
 
   <div class="hero-content">
     <p class="hero-label">Estúdio de design · São Luís, MA</p>
-    <h1 class="hero-title">
+    <h1 class="hero-title" id="hero-h1">
       ágora
       <span>Design</span>
     </h1>
     <div class="hero-bottom">
       <p class="hero-tagline">onde a sua marca<br>encontra seu lugar.</p>
-      <a href="#contato" class="hero-cta">Iniciar projeto →</a>
+      <a href="#contato" class="hero-cta">Iniciar projeto <span aria-hidden="true">→</span></a>
     </div>
   </div>
 
-  <div class="hero-scroll">
+  <div class="hero-scroll" aria-hidden="true">
     <div class="scroll-line"></div>
     <span>scroll</span>
   </div>
 </section>
 
 <!-- SOBRE -->
-<section id="sobre">
-  <!-- deco -->
-  <svg class="deco" style="position:absolute;top:60px;right:40px;width:280px;height:220px;opacity:0.1;pointer-events:none;" viewBox="0 0 280 220" fill="none">
+<section id="sobre" aria-labelledby="sobre-h2">
+  <svg aria-hidden="true" focusable="false" style="position:absolute;top:60px;right:40px;width:280px;height:220px;opacity:0.1;pointer-events:none;" viewBox="0 0 280 220" fill="none">
     <path d="M240 20 Q200 80 220 150 Q240 200 180 220" stroke="#A07850" stroke-width="1" stroke-linecap="round" fill="none"/>
     <path d="M260 60 Q230 100 250 150" stroke="#C9B99A" stroke-width="0.6" stroke-linecap="round" fill="none"/>
   </svg>
 
   <div class="sobre-grid">
     <div class="sobre-left reveal">
-      <div class="sobre-visual">
+      <div class="sobre-visual" role="img" aria-label="Ilustração com elementos gráficos mediterrâneos — arco, onda e traços gestuais">
         <div class="sobre-visual-inner">
-          <svg width="100%" height="100%" viewBox="0 0 300 400" fill="none">
-            <!-- arco grande interior -->
+          <svg aria-hidden="true" focusable="false" width="100%" height="100%" viewBox="0 0 300 400" fill="none">
             <path d="M50 390 L50 160 Q50 30 150 30 Q250 30 250 160 L250 390" stroke="#C9B99A" stroke-width="1.2" stroke-linecap="round" fill="none" opacity="0.2"/>
-            <!-- onda no meio -->
             <path d="M20 250 Q70 220 120 240 Q170 260 220 230 Q260 210 280 230" stroke="#A07850" stroke-width="0.8" stroke-linecap="round" fill="none" opacity="0.25"/>
-            <!-- coluna central -->
             <line x1="150" y1="60" x2="150" y2="380" stroke="#C9B99A" stroke-width="0.6" opacity="0.15"/>
-            <!-- logo ghost -->
             <text x="150" y="230" font-family="Georgia, serif" font-size="72" font-style="italic" fill="#E8DDD0" fill-opacity="0.08" text-anchor="middle">ágora</text>
           </svg>
         </div>
       </div>
-      <div class="sobre-tag">
+      <div class="sobre-tag" aria-hidden="true">
         <div class="sobre-tag-text">ἀγορά<br>praça pública grega</div>
       </div>
     </div>
 
     <div class="sobre-right reveal reveal-delay-2">
-      <div class="section-label">Estúdio</div>
-      <h2 class="sobre-titulo">O lugar onde<br>marcas encontram<br><em>sua essência.</em></h2>
+      <div class="section-label" aria-hidden="true">Estúdio</div>
+      <h2 class="sobre-titulo" id="sobre-h2">O lugar onde marcas encontram <em>sua essência.</em></h2>
       <p class="sobre-texto">A ágora Design é um estúdio criativo especializado em transformar marcas em experiências memoráveis. Trabalhamos com clientes de diferentes segmentos, unindo intenção estratégica e sensibilidade visual.</p>
       <p class="sobre-texto">Acreditamos que bom design não é decoração — é construção de significado.</p>
-      <div class="sobre-definicao">
-        <div class="sobre-definicao-grego">ἀγορά · aghorá · grego antigo</div>
-        <div class="sobre-definicao-text">"Praça pública. Espaço de encontro, troca e construção coletiva."</div>
-      </div>
+      <blockquote class="sobre-definicao">
+        <cite class="sobre-definicao-grego">ἀγορά · aghorá · grego antigo</cite>
+        <p class="sobre-definicao-text">"Praça pública. Espaço de encontro, troca e construção coletiva."</p>
+      </blockquote>
     </div>
   </div>
 </section>
 
 <!-- SERVIÇOS -->
-<section id="servicos">
-  <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:0.06;" viewBox="0 0 1440 800" fill="none">
+<section id="servicos" aria-labelledby="servicos-h2">
+  <svg aria-hidden="true" focusable="false" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:0.06;" viewBox="0 0 1440 800" fill="none">
     <path d="M-40 600 Q200 400 400 500 Q550 580 500 700" stroke="#C9B99A" stroke-width="1" stroke-linecap="round" fill="none"/>
     <path d="M1440 200 Q1200 300 1250 500 Q1280 620 1100 700" stroke="#A07850" stroke-width="0.8" stroke-linecap="round" fill="none"/>
   </svg>
 
   <div class="servicos-header reveal">
-    <div>
-      <div class="section-label light">Serviços</div>
-      <h2 class="servicos-titulo">O que<br><em>fazemos.</em></h2>
-    </div>
+    <div class="section-label light" aria-hidden="true">Serviços</div>
+    <h2 class="servicos-titulo" id="servicos-h2">O que <em>fazemos.</em></h2>
   </div>
 
   <div class="servicos-grid">
-    <div class="servico-card reveal">
-      <div class="servico-num">01</div>
-      <h3 class="servico-titulo">Branding &amp;<br>Identidade Visual</h3>
+    <article class="servico-card reveal">
+      <div class="servico-num" aria-hidden="true">01</div>
+      <h3 class="servico-titulo">Branding &amp; Identidade Visual</h3>
       <p class="servico-desc">Criação de marcas com alma — logo, paleta, tipografia, tom de voz e manual de uso. Do conceito à aplicação.</p>
-      <svg class="servico-deco" width="100" height="100" viewBox="0 0 100 120" fill="none">
+      <svg aria-hidden="true" focusable="false" class="servico-deco" width="100" height="100" viewBox="0 0 100 120" fill="none">
         <path d="M20 110 L20 45 Q20 10 50 10 Q80 10 80 45 L80 110" stroke="#C9B99A" stroke-width="1.2" stroke-linecap="round" fill="none"/>
         <line x1="10" y1="110" x2="90" y2="110" stroke="#C9B99A" stroke-width="0.8"/>
       </svg>
-    </div>
-
-    <div class="servico-card reveal reveal-delay-1">
-      <div class="servico-num">02</div>
+    </article>
+    <article class="servico-card reveal reveal-delay-1">
+      <div class="servico-num" aria-hidden="true">02</div>
       <h3 class="servico-titulo">Design Gráfico</h3>
       <p class="servico-desc">Peças impressas e digitais que comunicam com clareza e elegância. Materiais institucionais, editoriais e promocionais.</p>
-      <svg class="servico-deco" width="100" height="100" viewBox="0 0 120 80" fill="none">
+      <svg aria-hidden="true" focusable="false" class="servico-deco" width="100" height="100" viewBox="0 0 120 80" fill="none">
         <path d="M10 60 Q30 35 50 50 Q70 65 90 42 Q108 22 118 38" stroke="#C9B99A" stroke-width="1.2" stroke-linecap="round" fill="none"/>
         <path d="M10 72 Q30 48 50 62 Q70 78 90 54 Q108 34 118 50" stroke="#A07850" stroke-width="0.7" stroke-linecap="round" fill="none"/>
       </svg>
-    </div>
-
-    <div class="servico-card reveal reveal-delay-2">
-      <div class="servico-num">03</div>
-      <h3 class="servico-titulo">UI/UX &amp;<br>Web Design</h3>
+    </article>
+    <article class="servico-card reveal reveal-delay-2">
+      <div class="servico-num" aria-hidden="true">03</div>
+      <h3 class="servico-titulo">UI/UX &amp; Web Design</h3>
       <p class="servico-desc">Interfaces que encantam e convertem. Design de sites, landing pages e aplicativos centrado na experiência do usuário.</p>
-      <svg class="servico-deco" width="100" height="100" viewBox="0 0 120 120" fill="none">
+      <svg aria-hidden="true" focusable="false" class="servico-deco" width="100" height="100" viewBox="0 0 120 120" fill="none">
         <path d="M60 10 Q100 12 108 52 Q116 90 80 106 Q44 122 20 92 Q-4 62 14 28 Q30 0 60 10Z" stroke="#C9B99A" stroke-width="1.2" fill="none"/>
         <circle cx="60" cy="60" r="2" fill="#C9B99A" opacity="0.6"/>
       </svg>
-    </div>
-
-    <div class="servico-card reveal reveal-delay-3">
-      <div class="servico-num">04</div>
+    </article>
+    <article class="servico-card reveal reveal-delay-3">
+      <div class="servico-num" aria-hidden="true">04</div>
       <h3 class="servico-titulo">Social Media Design</h3>
       <p class="servico-desc">Presença visual coerente nas redes. Templates, feeds planejados e conteúdo visual que fortalece a marca.</p>
-      <svg class="servico-deco" width="100" height="100" viewBox="0 0 80 140" fill="none">
+      <svg aria-hidden="true" focusable="false" class="servico-deco" width="100" height="100" viewBox="0 0 80 140" fill="none">
         <line x1="40" y1="14" x2="40" y2="126" stroke="#C9B99A" stroke-width="1.4"/>
         <path d="M18 14 Q40 6 62 14" stroke="#C9B99A" stroke-width="1" fill="none"/>
         <line x1="12" y1="18" x2="68" y2="18" stroke="#A07850" stroke-width="0.7"/>
         <path d="M20 126 Q40 134 60 126" stroke="#C9B99A" stroke-width="1" fill="none"/>
         <line x1="12" y1="122" x2="68" y2="122" stroke="#A07850" stroke-width="0.7"/>
       </svg>
-    </div>
+    </article>
   </div>
 </section>
 
 <!-- PROCESSO -->
-<section id="processo">
-  <svg style="position:absolute;top:0;right:0;width:300px;height:400px;pointer-events:none;opacity:0.1;" viewBox="0 0 300 400" fill="none">
+<section id="processo" aria-labelledby="processo-h2">
+  <svg aria-hidden="true" focusable="false" style="position:absolute;top:0;right:0;width:300px;height:400px;pointer-events:none;opacity:0.1;" viewBox="0 0 300 400" fill="none">
     <path d="M280 20 Q240 100 260 200 Q280 300 220 380" stroke="#A07850" stroke-width="1" stroke-linecap="round" fill="none"/>
     <path d="M300 80 Q265 150 280 230" stroke="#C9B99A" stroke-width="0.6" stroke-linecap="round" fill="none"/>
   </svg>
 
   <div class="processo-header reveal">
-    <div class="section-label">Processo</div>
-    <h2 class="processo-titulo">Como<br><em>trabalhamos.</em></h2>
+    <div class="section-label" aria-hidden="true">Processo</div>
+    <h2 class="processo-titulo" id="processo-h2">Como <em>trabalhamos.</em></h2>
   </div>
 
-  <div class="processo-steps">
-    <div class="processo-step reveal">
-      <div class="step-num">01</div>
+  <ol class="processo-steps" aria-label="Etapas do processo criativo">
+    <li class="processo-step reveal">
+      <div class="step-num" aria-hidden="true">01</div>
       <div class="step-content">
         <h3 class="step-titulo">Imersão</h3>
         <p class="step-desc">Entendemos profundamente o seu negócio, público e objetivos. Ouvir antes de criar é o que diferencia um bom projeto de um projeto memorável.</p>
       </div>
-    </div>
-    <div class="processo-step reveal reveal-delay-1">
-      <div class="step-num">02</div>
+    </li>
+    <li class="processo-step reveal reveal-delay-1">
+      <div class="step-num" aria-hidden="true">02</div>
       <div class="step-content">
         <h3 class="step-titulo">Conceito</h3>
         <p class="step-desc">Desenvolvemos a direção criativa e o posicionamento estratégico da marca. É aqui que a essência toma forma antes de ganhar visual.</p>
       </div>
-    </div>
-    <div class="processo-step reveal reveal-delay-2">
-      <div class="step-num">03</div>
+    </li>
+    <li class="processo-step reveal reveal-delay-2">
+      <div class="step-num" aria-hidden="true">03</div>
       <div class="step-content">
         <h3 class="step-titulo">Criação</h3>
         <p class="step-desc">Damos forma visual à estratégia com atenção obsessiva aos detalhes. Cada elemento tem propósito e cada espaço tem intenção.</p>
       </div>
-    </div>
-    <div class="processo-step reveal reveal-delay-3">
-      <div class="step-num">04</div>
+    </li>
+    <li class="processo-step reveal reveal-delay-3">
+      <div class="step-num" aria-hidden="true">04</div>
       <div class="step-content">
         <h3 class="step-titulo">Entrega</h3>
         <p class="step-desc">Apresentamos os materiais finais com guia de uso, suporte para aplicação e tranquilidade de que a sua marca está pronta para o mundo.</p>
       </div>
-    </div>
-  </div>
+    </li>
+  </ol>
 </section>
 
 <!-- CONTATO -->
-<section id="contato">
-  <svg class="contato-svg" viewBox="0 0 1440 700" fill="none">
+<section id="contato" aria-labelledby="contato-h2">
+  <svg aria-hidden="true" focusable="false" class="contato-svg" viewBox="0 0 1440 700" fill="none">
     <path d="M0 500 Q200 430 400 470 Q600 510 800 440 Q1000 370 1200 420 Q1360 455 1440 430" stroke="#F5F0EA" stroke-width="1.2" stroke-linecap="round" fill="none"/>
     <path d="M0 560 Q200 490 400 530 Q600 570 800 500 Q1000 430 1200 480 Q1360 510 1440 490" stroke="#F5F0EA" stroke-width="0.6" stroke-linecap="round" fill="none"/>
     <path d="M100 30 Q100 -20 160 -20 Q220 -20 220 30 L220 90" stroke="#F5F0EA" stroke-width="0.8" stroke-linecap="round" fill="none"/>
-    <path d="M1340 620 Q1320 580 1350 540 Q1370 510 1360 470" stroke="#F5F0EA" stroke-width="0.7" stroke-linecap="round" fill="none"/>
   </svg>
 
-  <div class="section-label light contato-label reveal">05 — Contato</div>
-
-  <h2 class="contato-titulo reveal reveal-delay-1">Vamos construir sua marca juntos?</h2>
-
+  <div class="section-label light contato-label reveal" aria-hidden="true">05 — Contato</div>
+  <h2 class="contato-titulo reveal reveal-delay-1" id="contato-h2">Vamos construir sua marca juntos?</h2>
   <p class="contato-sub reveal reveal-delay-2">Entre em contato e conte sobre o seu projeto.<br>Respondo em até 24 horas.</p>
 
-  <a href="mailto:contato@agoradesign.com.br" class="contato-cta reveal reveal-delay-3">Iniciar conversa →</a>
+  <a href="mailto:contato@agoradesign.com.br" class="contato-cta reveal reveal-delay-3" aria-label="Enviar e-mail para iniciar uma conversa">
+    Iniciar conversa <span aria-hidden="true">→</span>
+  </a>
 
   <div class="contato-info reveal reveal-delay-4">
     <div class="contato-item">
-      <div class="contato-item-label">E-mail</div>
-      <div class="contato-item-value">contato@agoradesign.com.br</div>
+      <p class="contato-item-label">E-mail</p>
+      <p class="contato-item-value">contato@agoradesign.com.br</p>
     </div>
     <div class="contato-item">
-      <div class="contato-item-label">Instagram</div>
-      <div class="contato-item-value">@agoradesign</div>
+      <p class="contato-item-label">Instagram</p>
+      <p class="contato-item-value">@agoradesign</p>
     </div>
     <div class="contato-item">
-      <div class="contato-item-label">WhatsApp</div>
-      <div class="contato-item-value">+55 (98) 9 0000-0000</div>
+      <p class="contato-item-label">WhatsApp</p>
+      <p class="contato-item-value">+55 (98) 9 0000-0000</p>
     </div>
   </div>
 </section>
 
+</main>
+
 <!-- FOOTER -->
-<footer>
-  <div class="footer-logo">ágora</div>
+<footer role="contentinfo">
+  <div class="footer-logo" aria-label="ágora Design">ágora</div>
   <div class="footer-text">© 2025 ágora Design · São Luís, MA</div>
 </footer>
 
 <script>
-  // Custom cursor
+  // Cursor apenas para mouse (pointer: fine)
+  const hasMouse = window.matchMedia('(pointer: fine)').matches;
   const cursor = document.getElementById('cursor');
-  const ring = document.getElementById('cursorRing');
-  let mx = 0, my = 0, rx = 0, ry = 0;
+  const ring   = document.getElementById('cursorRing');
 
-  document.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    cursor.style.left = mx + 'px';
-    cursor.style.top = my + 'px';
-  });
-
-  function animateRing() {
-    rx += (mx - rx) * 0.12;
-    ry += (my - ry) * 0.12;
-    ring.style.left = rx + 'px';
-    ring.style.top = ry + 'px';
-    requestAnimationFrame(animateRing);
+  if (hasMouse) {
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cursor.style.left = mx + 'px';
+      cursor.style.top  = my + 'px';
+    });
+    (function animateRing() {
+      rx += (mx - rx) * 0.12;
+      ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px';
+      ring.style.top  = ry + 'px';
+      requestAnimationFrame(animateRing);
+    })();
+    document.querySelectorAll('a, button, .servico-card, .processo-step').forEach(el => {
+      el.addEventListener('mouseenter', () => { cursor.style.width = '14px'; cursor.style.height = '14px'; ring.style.width = '48px'; ring.style.height = '48px'; ring.style.opacity = '0.8'; });
+      el.addEventListener('mouseleave', () => { cursor.style.width = '8px';  cursor.style.height = '8px';  ring.style.width = '32px'; ring.style.height = '32px'; ring.style.opacity = '0.5'; });
+    });
+  } else {
+    cursor.style.display = 'none';
+    ring.style.display   = 'none';
   }
-  animateRing();
-
-  document.querySelectorAll('a, button, .servico-card, .processo-step').forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      cursor.style.width = '14px';
-      cursor.style.height = '14px';
-      ring.style.width = '48px';
-      ring.style.height = '48px';
-      ring.style.opacity = '0.8';
-    });
-    el.addEventListener('mouseleave', () => {
-      cursor.style.width = '8px';
-      cursor.style.height = '8px';
-      ring.style.width = '32px';
-      ring.style.height = '32px';
-      ring.style.opacity = '0.5';
-    });
-  });
 
   // Nav scroll
   const nav = document.getElementById('nav');
   window.addEventListener('scroll', () => {
     nav.classList.toggle('scrolled', window.scrollY > 60);
-  });
+  }, { passive: true });
 
-  // Scroll reveal
-  const revealEls = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        observer.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.15 });
-
-  revealEls.forEach(el => observer.observe(el));
+  // Scroll reveal com respeito a prefers-reduced-motion
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced) {
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+  } else {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+  }
 </script>
 </body>
 </html>
